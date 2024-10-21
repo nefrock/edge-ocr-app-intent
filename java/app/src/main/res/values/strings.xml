@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">EdgeOCRIntent</string>
+    <string name="scan_all_button_title">全読みモード</string>
+    <string name="scan_with_custom_definition_button_title">シングルモード</string>
+</resources>

@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/EdgeOCRAppInput",
+  "definitions": {
+    "EdgeOCRAppInput": {
+      "$comment": "input definition",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {        
+        "title": {
+          "$comment": "タイトル",
+          "type": "string"
+        },
+        "scanDefinitions": {
+          "$comment": "スキャン定義",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ScanDefinition"
+          }
+        },
+        "requestId": {
+          "$comment": "リクエストID",
+          "type": "string"
+        },
+        "scenarioId": {
+          "$comment": "シナリオID",
+          "$ref": "#/definitions/UUID"
+        }
+      },
+      "required": ["scenarioId", "title"],
+      "title": "EdgeOCRAppInput"
+    },
+    "ScanDefinition": {
+      "$comment": "スキャン定義",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$comment": "スキャン定義ID",
+          "$ref": "#/definitions/UUID"
+        },
+        "name": {
+          "$comment": "スキャン名",
+          "type": "string"
+        },
+        "dictPattern": {
+          "$comment": "辞書パターン",
+          "$ref": "#/definitions/DictPattern"
+        }
+      },
+      "required": ["id", "name", "dictPattern"],
+      "title": "ScanDefinition"
+    },
+    "DictPattern": {
+      "$comment": "辞書パターン",
+      "type": "object",
+      "properties": {
+        "matchingType": {
+          "$comment": "マッチング方式",
+          "$ref": "#/definitions/MatchingType"
+        },
+        "contents": {
+          "$comment": "辞書内容",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fuzzyMode": {
+          "$comment": "曖昧検索モード disabled(無効), littel_fuzzy(多少曖昧), very_fuzzy(とても曖昧), ",
+          "type": "string",
+          "enum": ["DISABLED", "LITTLE_FUZZY", "VERY_FUZZY"]
+        }
+      },
+      "required": ["matchingType", "contents", "fuzzyMode"]
+    },
+    "UUID": {
+      "$comment": "UUID",
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "MatchingType": {
+      "$comment": "マッチング方式. exact(完全一致), forward(前方一致), partial(部分一致), backward(後方一致)",
+      "type": "string",
+      "enum": ["EXACT", "FORWARD", "PARTIAL", "BACKWARD"]
+    }
+  }
+}

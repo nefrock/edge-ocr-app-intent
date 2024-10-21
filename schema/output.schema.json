@@ -1,0 +1,275 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/EdgeOCROutput",
+  "definitions": {
+    "EdgeOCROutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requestId": {
+          "$comment": "リクエストID",
+          "type": "string"
+        },
+        "scenarioId": {
+          "$comment": "シナリオID",
+          "$ref": "#/definitions/UUID"
+        },
+        "result": {
+          "$comment": "結果",
+          "$ref": "#/definitions/Result"
+        },
+        "version": {
+          "$comment": "バージョン",
+          "type": "string",
+          "const": "1-0-0"
+        },
+        "scanModeType": {
+          "$comment": "スキャンモードタイプ。single(シングル), multi(同時), continuous(連続), all(全読み), form(帳票)",
+          "type": "string",
+          "enum": ["SINGLE", "MULTI", "CONTINUOUS", "ALL", "FORM"]
+        },
+        "singleScanResult": {
+          "$comment": "シングル読み結果",
+          "$ref": "#/definitions/SingleScanResult"
+        },
+        "multiScanResult": {
+          "$comment": "同時読み結果",
+          "$ref": "#/definitions/MultiScanResult"
+        },
+        "continuousScanResult": {
+          "$comment": "連続読み結果",
+          "$ref": "#/definitions/ContinuousScanResult"
+        },
+        "allScanResult": {
+          "$comment": "全読み結果",
+          "$ref": "#/definitions/AllScanResult"
+        },
+        "formScanResult": {
+          "$comment": "帳票読み結果",
+          "$ref": "#/definitions/FormScanResult"
+        },
+        "images": {
+          "$comment": "画像",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Image"
+          }
+        }
+      },
+      "required": ["version", "scanModeType", "result"]
+    },
+    "SingleScanResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "$comment": "読み取り結果",
+          "$ref": "#/definitions/Content"
+        }
+      },
+      "required": ["content"],
+      "title": "SingleScanResult"
+    },
+    "MultiScanResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contents": {
+          "$comment": "読み取り結果",
+          "$ref": "#/definitions/Contents"
+        }
+      },
+      "required": ["contents"],
+      "title": "MultiScanResult"
+    },
+    "ContinuousScanResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contentsArr": {
+            "$comment": "連続読み取り結果",
+            "type": "array",
+            "items": {
+              "type" : "array",
+              "items": {
+                  "$ref": "#/definitions/Contents"
+              }
+            }
+        }
+      },
+      "required": ["contentsArr"],
+      "title": "ContinuousScanResult"
+    },
+    "FormScanResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contents": {
+          "$comment": "読み取り結果",
+          "$ref": "#/definitions/Contents"
+        }
+      },
+      "required": ["contents"],
+      "title": "FormScanResult"
+    },
+    "AllScanResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contents": {
+          "$comment": "読み取り結果",
+          "$ref": "#/definitions/Contents"
+        }
+      },
+      "required": ["contents"],
+      "title": "AllScanResult"
+    },
+    "UUID": {
+      "$comment": "UUID",
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "BBox": {
+      "additionalProperties": false,
+      "$comment": "BBox",
+      "type": "object",
+      "properties": {
+        "x": {
+          "$comment": "x座標(左上)",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "$comment": "y座標(左上)",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "width": {
+          "$comment": "幅",
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "height": {
+          "$comment": "高さ",
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": ["x", "y", "width", "height"]
+    },
+    "BarcodePattern": {
+      "$comment": "バーコードパターン",
+      "type": "string",
+      "enum": [
+        "JAN",
+        "EAN",
+        "UPC",
+        "CODE39",
+        "CODE93",
+        "CODE128",
+        "ITF",
+        "MICROQR",
+        "PDF417",
+        "DATAMATRIX",
+        "QR",
+        "CODABAR",
+        "AZTEC",
+        "MAXICODE",
+        "DXFILMEDGE"
+      ]
+    },
+    "Image": {
+      "$comment": "画像",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "imageId": {
+          "$comment": "id",
+          "type": "integer",
+          "minimum": 1
+        },
+        "uri": {
+          "$comment": "画像URI",
+          "type": "string"
+        }
+      },
+      "required": ["imageId", "uri"]
+    },
+    "Contents": {
+      "$comment": "読み取り結果",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Content"
+      }
+    },
+    "Content": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scanDefinitionId": {
+          "$comment": "スキャン定義ID",
+          "$ref": "#/definitions/UUID"
+        },
+        "scanDefinitionName": {
+          "$comment": "スキャン定義名",
+          "type": "string"
+        },
+        "text": {
+          "$comment": "結果",
+          "type": "string"
+        },
+        "type": {
+          "$comment": "タイプ",
+          "type": "string",
+          "enum": ["TEXT", "BARCODE"]
+        },
+        "barcodePattern": {
+          "$comment": "バーコードパターン",
+          "$ref": "#/definitions/BarcodePattern"
+        },
+        "confidence": {
+          "$comment": "信頼度",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "bbox": {
+          "$comment": "bbox",
+          "$ref": "#/definitions/BBox"
+        },
+        "targetImageId": {
+          "$comment": "スキャン対象部分の画像Id",
+          "type": "integer",
+          "minimum": 1
+        },
+        "fullImageId": {
+          "$comment": "全画像Id",
+          "type": "integer",
+          "minimum": 1
+        },
+        "scannedAt": {
+          "$comment": "読み取り日時",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scanDefinitionId",
+        "scanDefinitionName",
+        "text",
+        "type",
+        "confidence",
+        "bbox",
+        "scannedAt"
+      ]
+    },
+    "Result": {
+      "$comment": "読み取り結果",
+      "type": "string",
+      "enum": ["SUCCESS", "ERROR"]
+    }
+  }
+}
